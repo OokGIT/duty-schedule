@@ -77,6 +77,8 @@ DATABASES = {
 # PyMySQL compatibility
 import pymysql
 pymysql.install_as_MySQLdb()
+pymysql.version_info = (2, 2, 1, "final", 0)
+pymysql.__version__ = "2.2.1"
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
