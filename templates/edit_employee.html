@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Редагувати працівника{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>✏️ Редагувати працівника</h2>
+</div>
+
+<div class="form-container">
+    <form method="POST" action="{% url 'edit_employee' employee.id %}" class="duty-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Ім'я та прізвище *</label>
+            <input type="text" name="name" id="name" required value="{{ employee.name }}">
+        </div>
+
+        <div class="form-group">
+            <label for="position">Посада</label>
+            <input type="text" name="position" id="position" value="{{ employee.position }}">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">✅ Зберегти</button>
+            <a href="{% url 'employees' %}" class="btn btn-secondary">❌ Скасувати</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Додати працівника{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>➕ Додати нового працівника</h2>
+</div>
+
+<div class="form-container">
+    <form method="POST" action="{% url 'add_employee' %}" class="duty-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Ім'я та прізвище *</label>
+            <input type="text" name="name" id="name" required placeholder="Наприклад: Іван Петренко" value="{{ form.name.value|default:'' }}">
+        </div>
+
+        <div class="form-group">
+            <label for="position">Посада</label>
+            <input type="text" name="position" id="position" placeholder="Наприклад: Охоронець" value="{{ form.position.value|default:'' }}">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">✅ Зберегти</button>
+            <a href="{% url 'employees' %}" class="btn btn-secondary">❌ Скасувати</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

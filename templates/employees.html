@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Працівники{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>👥 Список працівників</h2>
+    <a href="{% url 'add_employee' %}" class="btn btn-primary">+ Додати працівника</a>
+</div>
+
+{% if employees %}
+<div class="table-container">
+    <table class="employees-table">
+        <thead>
+            <tr>
+                <th>Прізвище та ініціали</th>
+                <th>Посада</th>
+                <th>Кількість чергувань</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td><strong>{{ employee.name }}</strong></td>
+                <td>{{ employee.position }}</td>
+                <td>{{ employee.duty_count }}</td>
+                <td class="actions-cell">
+                    <a href="{% url 'edit_employee' employee.id %}"
+                       class="btn-icon btn-edit"
+                       title="Редагувати">
+                        ✏️
+                    </a>
+                    <a href="{% url 'delete_employee' employee.id %}"
+                       class="btn-icon btn-delete"
+                       title="Видалити"
+                       onclick="return confirm('Ви впевнені, що хочете видалити цього працівника? Всі його чергування також будуть видалені.')">
+                        🗑️
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <p>👤 Працівників ще немає</p>
+    <a href="{% url 'add_employee' %}" class="btn btn-primary">Додати першого працівника</a>
+</div>
+{% endif %}
+{% endblock %}

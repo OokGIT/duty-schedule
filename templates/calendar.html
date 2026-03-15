@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Календар чергувань - {{ month_name }} {{ year }}{% endblock %}
+
+{% block content %}
+<div class="calendar-header">
+    <a href="{% url 'calendar_view' prev_year prev_month %}" class="btn btn-secondary">
+        ← {{ prev_month }}/{{ prev_year }}
+    </a>
+    <h2>📅 {{ month_name }} {{ year }}</h2>
+    <a href="{% url 'calendar_view' next_year next_month %}" class="btn btn-secondary">
+        {{ next_month }}/{{ next_year }} →
+    </a>
+</div>
+
+{% if employees %}
+<div class="calendar-container">
+    <table class="calendar-table">
+        <thead>
+            <tr>
+                <th class="employee-column">Працівник</th>
+                {% for day in days_in_month|range %}
+                <th class="day-column">{{ forloop.counter }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td class="employee-cell">
+                    <div class="employee-name">{{ employee.name }}</div>
+                    <div class="employee-position">{{ employee.position }}</div>
+                </td>
+                {% for day in days_in_month|range %}
+                <td class="duty-cell">
+                    {% with employee_duties=duty_dict|get_item:employee.id %}
+                    {% if employee_duties and employee_duties|get_item:forloop.counter %}
+                        {% with sites=employee_duties|get_item:forloop.counter %}
+                        {% for site in sites %}
+                        <div class="site-badge" title="{{ site.name }} - {{ site.address }}">
+                            {{ site.name|truncatechars:10 }}
+                        </div>
+                        {% endfor %}
+                        {% endwith %}
+                    {% else %}
+                    <span class="empty-cell">-</span>
+                    {% endif %}
+                    {% endwith %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <p>👤 Працівників ще немає</p>
+    <a href="{% url 'add_employee' %}" class="btn btn-primary">Додати першого працівника</a>
+</div>
+{% endif %}
+
+<div class="calendar-actions">
+    <a href="{% url 'add_duty' %}" class="btn btn-primary">+ Додати чергування</a>
+    <a href="{% url 'index' %}" class="btn btn-secondary">Переглянути список</a>
+</div>
+{% endblock %}

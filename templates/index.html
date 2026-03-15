@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Графік чергувань - Головна{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>📅 Графік чергувань</h2>
+</div>
+
+{% if duties %}
+<div class="table-container">
+    <table class="duty-table">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Працівник</th>
+                <th>Посада</th>
+                <th>Об'єкт</th>
+                <th>Адреса</th>
+                <th>Примітки</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for duty in duties %}
+            <tr>
+                <td>{{ duty.date|date:"d.m.Y" }}</td>
+                <td><strong>{{ duty.employee.name }}</strong></td>
+                <td>{{ duty.employee.position }}</td>
+                <td><strong>{{ duty.site.name }}</strong></td>
+                <td>{{ duty.site.address }}</td>
+                <td>{{ duty.notes|default:'-' }}</td>
+                <td>
+                    <a href="{% url 'delete_duty' duty.id %}"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Ви впевнені, що хочете видалити це чергування?')">
+                        🗑️ Видалити
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <p>📭 Чергувань ще немає</p>
+    <a href="{% url 'add_duty' %}" class="btn btn-primary">Додати перше чергування</a>
+</div>
+{% endif %}
+{% endblock %}

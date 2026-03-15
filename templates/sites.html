@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Об'єкти{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>🏢 Список об'єктів</h2>
+    <a href="{% url 'add_site' %}" class="btn btn-primary">+ Додати об'єкт</a>
+</div>
+
+{% if sites %}
+<div class="table-container">
+    <table class="sites-table">
+        <thead>
+            <tr>
+                <th>Назва</th>
+                <th>Адреса</th>
+                <th>Кількість чергувань</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for site in sites %}
+            <tr>
+                <td><strong>{{ site.name }}</strong></td>
+                <td>{{ site.address }}</td>
+                <td>{{ site.duty_count }}</td>
+                <td class="actions-cell">
+                    <a href="{% url 'edit_site' site.id %}"
+                       class="btn-icon btn-edit"
+                       title="Редагувати">
+                        ✏️
+                    </a>
+                    <a href="{% url 'delete_site' site.id %}"
+                       class="btn-icon btn-delete"
+                       title="Видалити"
+                       onclick="return confirm('Ви впевнені, що хочете видалити цей об\'єкт? Всі чергування на ньому також будуть видалені.')">
+                        🗑️
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <p>🏢 Об'єктів ще немає</p>
+    <a href="{% url 'add_site' %}" class="btn btn-primary">Додати перший об'єкт</a>
+</div>
+{% endif %}
+{% endblock %}

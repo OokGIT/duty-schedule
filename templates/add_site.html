@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Додати об'єкт{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>➕ Додати новий об'єкт</h2>
+</div>
+
+<div class="form-container">
+    <form method="POST" action="{% url 'add_site' %}" class="duty-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Назва об'єкта *</label>
+            <input type="text" name="name" id="name" required placeholder="Наприклад: Склад №1" value="{{ form.name.value|default:'' }}">
+        </div>
+
+        <div class="form-group">
+            <label for="address">Адреса</label>
+            <input type="text" name="address" id="address" placeholder="Наприклад: вул. Промислова, 15" value="{{ form.address.value|default:'' }}">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">✅ Зберегти</button>
+            <a href="{% url 'sites' %}" class="btn btn-secondary">❌ Скасувати</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

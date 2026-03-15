@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Редагувати об'єкт{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>✏️ Редагувати об'єкт</h2>
+</div>
+
+<div class="form-container">
+    <form method="POST" action="{% url 'edit_site' site.id %}" class="duty-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Назва об'єкта *</label>
+            <input type="text" name="name" id="name" required value="{{ site.name }}">
+        </div>
+
+        <div class="form-group">
+            <label for="address">Адреса</label>
+            <input type="text" name="address" id="address" value="{{ site.address }}">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">✅ Зберегти зміни</button>
+            <a href="{% url 'sites' %}" class="btn btn-secondary">❌ Скасувати</a>
+        </div>
+    </form>
+</div>
+
+<hr style="margin: 2rem 0; border: none; border-top: 2px solid #e0e0e0;">
+
+<div class="page-header">
+    <h3>📅 Додати чергування на цьому об'єкті</h3>
+</div>
+
+<div class="form-container">
+    <form method="POST" action="{% url 'edit_site' site.id %}" class="duty-form">
+        {% csrf_token %}
+        <input type="hidden" name="add_duty" value="1">
+        
+        <div class="form-group">
+            <label for="employee_id">Працівник *</label>
+            <select name="employee_id" id="employee_id" required>
+                <option value="">Оберіть працівника</option>
+                {% for employee in employees %}
+                <option value="{{ employee.id }}">{{ employee.name }} - {{ employee.position }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="date">Дата чергування *</label>
+            <input type="date" name="date" id="date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Примітки</label>
+            <textarea name="notes" id="notes" rows="3" placeholder="Додаткова інформація про чергування..."></textarea>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">✅ Додати чергування</button>
+        </div>
+    </form>
+</div>
+
+<hr style="margin: 2rem 0; border: none; border-top: 2px solid #e0e0e0;">
+
+<div class="page-header">
+    <h3>📋 Існуючі чергування на об'єкті</h3>
+</div>
+
+{% if duties %}
+<div class="table-container">
+    <table class="duty-table">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Працівник</th>
+                <th>Посада</th>
+                <th>Примітки</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for duty in duties %}
+            <tr>
+                <td>{{ duty.date|date:"d.m.Y" }}</td>
+                <td><strong>{{ duty.employee.name }}</strong></td>
+                <td>{{ duty.employee.position }}</td>
+                <td>{{ duty.notes|default:'-' }}</td>
+                <td>
+                    <a href="{% url 'delete_duty' duty.id %}"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Ви впевнені, що хочете видалити це чергування?')">
+                        🗑️ Видалити
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <p>📭 Чергувань на цьому об'єкті ще немає</p>
+</div>
+{% endif %}
+{% endblock %}

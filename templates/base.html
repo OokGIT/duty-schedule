@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Графік чергувань{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <!-- Sidebar Toggle Button (visible only when sidebar is collapsed) -->
+    <button class="sidebar-toggle" id="sidebarToggle" type="button">
+        <span class="toggle-icon">☰</span>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="{% url 'index' %}" class="sidebar-brand">
+                <span class="brand-icon">📋</span>
+                <span class="brand-text">Графік чергувань</span>
+            </a>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="{% url 'index' %}" class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-text">Список</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'calendar_view' %}" class="nav-link {% if request.resolver_match.url_name == 'calendar_view' %}active{% endif %}">
+                        <span class="nav-icon">📅</span>
+                        <span class="nav-text">Календар</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'employees' %}" class="nav-link {% if request.resolver_match.url_name == 'employees' %}active{% endif %}">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-text">Працівники</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'sites' %}" class="nav-link {% if request.resolver_match.url_name == 'sites' %}active{% endif %}">
+                        <span class="nav-icon">🏢</span>
+                        <span class="nav-text">Об'єкти</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <hr class="sidebar-divider">
+            
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="{% url 'add_duty' %}" class="nav-link nav-link-primary">
+                        <span class="nav-icon">➕</span>
+                        <span class="nav-text">Додати чергування</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <span class="footer-text">&copy; 2026</span>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            {% block content %}{% endblock %}
+        </div>
+        
+        <footer class="main-footer">
+            <p>&copy; 2026 Система управління чергуваннями</p>
+        </footer>
+    </main>
+
+    <script>
+        // Sidebar toggle functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const body = document.body;
+        
+        // Check for saved sidebar state
+        const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+        if (sidebarCollapsed) {
+            body.classList.add('sidebar-collapsed');
+        }
+        
+        sidebarToggle.addEventListener('click', function() {
+            body.classList.toggle('sidebar-collapsed');
+            localStorage.setItem('sidebarCollapsed', body.classList.contains('sidebar-collapsed'));
+        });
+    </script>
+</body>
+</html>
