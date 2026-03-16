@@ -152,7 +152,7 @@ def edit_site(request, id):
     else:
         form = SiteForm(instance=site)
     
-    employees = Employee.objects.order_by('name')
+    employees = Employee.objects.order_by('last_name')
     duties = Duty.objects.filter(site=site).select_related('employee').order_by('date')
     
     return render(request, 'edit_site.html', {
