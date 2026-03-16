@@ -15,6 +15,34 @@
     </a>
 </div>
 
+<!-- Site Change Modal -->
+<div id="siteChangeModal" class="site-modal">
+    <div class="site-modal-content">
+        <span class="site-modal-close" onclick="closeSiteModal()">&times;</span>
+        <h3>🔄 Змінити об'єкт</h3>
+        <form id="siteChangeForm" method="POST" action="{% url 'change_duty_site' %}">
+            {% csrf_token %}
+            <input type="hidden" id="dutyId" name="duty_id">
+            <input type="hidden" name="year" value="{{ year }}">
+            <input type="hidden" name="month" value="{{ month }}">
+            
+            <div class="form-group">
+                <label for="newSite">Оберіть новий об'єкт:</label>
+                <select name="site_id" id="newSite" class="form-control" required>
+                    {% for site in all_sites %}
+                    <option value="{{ site.id }}">{{ site.name }} ({{ site.short_name|default:site.name }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">✅ Змінити</button>
+                <button type="button" class="btn btn-secondary" onclick="closeSiteModal()">❌ Скасувати</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 {% if employees %}
 <div class="calendar-container">
     <table class="calendar-table">
@@ -37,10 +65,13 @@
                 <td class="duty-cell">
                     {% with employee_duties=duty_dict|get_item:employee.id %}
                     {% if employee_duties and employee_duties|get_item:forloop.counter %}
-                        {% with sites=employee_duties|get_item:forloop.counter %}
-                        {% for site in sites %}
-                        <div class="site-badge" title="{{ site.name }} - {{ site.address }}">
-                            {{ site.name|truncatechars:10 }}
+                        {% with duties=employee_duties|get_item:forloop.counter %}
+                        {% for duty_id, site in duties %}
+                        <div class="site-badge" 
+                             title="{{ site.name }} - {{ site.address }}"
+                             onclick="openSiteModal({{ duty_id }}, '{{ site.name }}')"
+                             style="cursor: pointer;">
+                            {{ site.short_name|default:site.name|truncatechars:10 }}
                         </div>
                         {% endfor %}
                         {% endwith %}
@@ -66,4 +97,23 @@
     <a href="{% url 'add_duty' %}" class="btn btn-primary">+ Додати чергування</a>
     <a href="{% url 'index' %}" class="btn btn-secondary">Переглянути список</a>
 </div>
+
+<script>
+function openSiteModal(dutyId, siteName) {
+    document.getElementById('dutyId').value = dutyId;
+    document.getElementById('siteChangeModal').style.display = 'block';
+}
+
+function closeSiteModal() {
+    document.getElementById('siteChangeModal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    var modal = document.getElementById('siteChangeModal');
+    if (event.target == modal) {
+        closeSiteModal();
+    }
+}
+</script>
 {% endblock %}

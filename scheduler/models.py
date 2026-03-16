@@ -22,6 +22,7 @@ class Employee(models.Model):
 class Site(models.Model):
     """Модель для об'єктів"""
     name = models.CharField(max_length=100, verbose_name="Назва об'єкта")
+    short_name = models.CharField(max_length=20, blank=True, verbose_name="Скорочена назва")
     address = models.CharField(max_length=200, blank=True, verbose_name="Адреса")
     created_at = models.DateTimeField(auto_now_add=True)
 

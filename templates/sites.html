@@ -15,6 +15,7 @@
         <thead>
             <tr>
                 <th>Назва</th>
+                <th>Скорочена назва</th>
                 <th>Адреса</th>
                 <th>Кількість чергувань</th>
                 <th>Дії</th>
@@ -24,6 +25,7 @@
             {% for site in sites %}
             <tr>
                 <td><strong>{{ site.name }}</strong></td>
+                <td>{{ site.short_name|default:'-' }}</td>
                 <td>{{ site.address }}</td>
                 <td>{{ site.duty_count }}</td>
                 <td class="actions-cell">

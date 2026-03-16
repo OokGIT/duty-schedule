@@ -23,11 +23,15 @@ class SiteForm(forms.ModelForm):
     """Форма для об'єктів"""
     class Meta:
         model = Site
-        fields = ['name', 'address']
+        fields = ['name', 'short_name', 'address']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': "Наприклад: Склад №1"
+            }),
+            'short_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': "Наприклад: Склад1"
             }),
             'address': forms.TextInput(attrs={
                 'class': 'form-control',

@@ -51,6 +51,23 @@ def delete_duty(request, id):
     return redirect('index')
 
 
+def change_duty_site(request):
+    """Зміна об'єкта в чергуванні"""
+    if request.method == 'POST':
+        duty_id = request.POST.get('duty_id')
+        site_id = request.POST.get('site_id')
+        year = request.POST.get('year')
+        month = request.POST.get('month')
+        
+        duty = get_object_or_404(Duty, id=duty_id)
+        duty.site_id = site_id
+        duty.save()
+        
+        return redirect('calendar_view', year=int(year), month=int(month))
+    
+    return redirect('index')
+
+
 def employees(request):
     """Список працівників"""
     employees = Employee.objects.annotate(duty_count=models.Count('duties'))
@@ -187,7 +204,7 @@ def calendar_view(request, year=None, month=None):
     ).select_related('employee', 'site')
     
     # Створюємо словник для швидкого доступу до чергувань
-    # Ключ: employee_id, Значення: словник {day: [sites]}
+    # Ключ: employee_id, Значення: словник {day: [(duty_id, site)]}
     duty_dict = {}
     for duty in duties:
         day = duty.date.day
@@ -195,7 +212,7 @@ def calendar_view(request, year=None, month=None):
             duty_dict[duty.employee_id] = {}
         if day not in duty_dict[duty.employee_id]:
             duty_dict[duty.employee_id][day] = []
-        duty_dict[duty.employee_id][day].append(duty.site)
+        duty_dict[duty.employee_id][day].append((duty.id, duty.site))
     
     # Обчислюємо попередній та наступний місяці
     if month == 1:
@@ -223,6 +240,7 @@ def calendar_view(request, year=None, month=None):
         'prev_month': prev_month,
         'next_year': next_year,
         'next_month': next_month,
+        'all_sites': Site.objects.order_by('name'),
     }
     
     return render(request, 'calendar.html', context)
