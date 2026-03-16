@@ -81,6 +81,11 @@ class Site(models.Model):
         except (ValueError, IndexError):
             return '#ffffff'
 
+    @property
+    def has_custom_color(self):
+        """Перевіряє чи встановлено власний колір (не стандартний)"""
+        return self.color and self.color != '#4f46e5'
+
 
 class Duty(models.Model):
     """Модель для чергувань"""

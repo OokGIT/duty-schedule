@@ -67,12 +67,11 @@
                     {% if employee_duties and employee_duties|get_item:forloop.counter %}
                         {% with duties=employee_duties|get_item:forloop.counter %}
                         {% for duty_id, site in duties %}
-                        {% if site.color and site.color != '#4f46e5' %}
-                        <div class="site-badge site-color-badge"
+                        {% if site.has_custom_color %}
+                        <div class="site-color-square"
                              title="{{ site.name }} - {{ site.address }}"
                              onclick="openPopup(event, {{ duty_id }})"
-                             style="background-color: {{ site.color }}; color: {{ site.get_text_color }};">
-                            {{ site.short_name|default:site.name|truncatechars:8 }}
+                             style="background-color: {{ site.color }};">
                         </div>
                         {% else %}
                         <div class="site-badge"
