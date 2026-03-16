@@ -29,7 +29,7 @@
             </div>
             
             <div class="form-group" style="margin: 0;">
-                <select name="site_id" id="popupSite" class="form-control" required style="margin: 0; width: 100%;" onchange="this.form.submit()">
+                <select name="site_id" id="popupSite" class="form-control" required style="margin: 0; width: 100%;" size="8" onchange="this.form.submit()">
                     <option value="" disabled selected>Оберіть об'єкт...</option>
                     {% for site in all_sites %}
                     <option value="{{ site.id }}">{{ site.name }} ({{ site.short_name|default:site.name }})</option>
@@ -130,10 +130,9 @@ function openPopup(event, dutyId) {
     
     document.getElementById('popupDutyId').value = dutyId;
     
-    // Focus and open the select dropdown
+    // Focus on the select
     const select = document.getElementById('popupSite');
     select.focus();
-    select.click();
     
     currentPopup = popup;
 }
