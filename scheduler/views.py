@@ -189,7 +189,7 @@ def calendar_view(request, year=None, month=None):
     days_in_month = monthrange(year, month)[1]
     
     # Отримуємо всіх працівників
-    employees = Employee.objects.order_by('name')
+    employees = Employee.objects.order_by('last_name')
     
     # Отримуємо всі чергування за цей місяць
     start_date = date(year, month, 1)
