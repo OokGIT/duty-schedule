@@ -25,20 +25,16 @@
             <input type="hidden" name="month" value="{{ month }}">
             
             <div class="popup-header">
-                <span>🔄 Змінити об'єкт</span>
-                <button type="button" class="popup-close" onclick="closePopup()">&times;</button>
+                <span>🔄 Замінити на:</span>
             </div>
             
-            <div class="form-group" style="margin: 0.75rem 0;">
-                <select name="site_id" id="popupSite" class="form-control" required style="margin: 0;">
+            <div class="form-group" style="margin: 0;">
+                <select name="site_id" id="popupSite" class="form-control" required style="margin: 0; width: 100%;" onchange="this.form.submit()">
+                    <option value="" disabled selected>Оберіть об'єкт...</option>
                     {% for site in all_sites %}
                     <option value="{{ site.id }}">{{ site.name }} ({{ site.short_name|default:site.name }})</option>
                     {% endfor %}
                 </select>
-            </div>
-            
-            <div class="popup-actions">
-                <button type="submit" class="btn btn-primary btn-sm">✅ ОК</button>
             </div>
         </form>
     </div>
@@ -133,6 +129,12 @@ function openPopup(event, dutyId) {
     popup.style.position = 'absolute';
     
     document.getElementById('popupDutyId').value = dutyId;
+    
+    // Focus and open the select dropdown
+    const select = document.getElementById('popupSite');
+    select.focus();
+    select.click();
+    
     currentPopup = popup;
 }
 
