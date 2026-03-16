@@ -214,6 +214,9 @@ def calendar_view(request, year=None, month=None):
             duty_dict[duty.employee_id][day] = []
         duty_dict[duty.employee_id][day].append((duty.id, duty.site))
     
+    # Отримуємо посади для кожного працівника
+    employee_positions = {e.id: e.position for e in employees}
+    
     # Обчислюємо попередній та наступний місяці
     if month == 1:
         prev_month = 12

@@ -16,6 +16,8 @@
             <tr>
                 <th>Назва</th>
                 <th>Скорочена назва</th>
+                <th>Відображення</th>
+                <th>Колір</th>
                 <th>Адреса</th>
                 <th>Кількість чергувань</th>
                 <th>Дії</th>
@@ -26,6 +28,8 @@
             <tr>
                 <td><strong>{{ site.name }}</strong></td>
                 <td>{{ site.short_name|default:'-' }}</td>
+                <td>{{ site.get_display_mode_display }}</td>
+                <td><div style="width: 24px; height: 24px; background: {{ site.color }}; border-radius: 4px; border: 1px solid #ddd;"></div></td>
                 <td>{{ site.address }}</td>
                 <td>{{ site.duty_count }}</td>
                 <td class="actions-cell">

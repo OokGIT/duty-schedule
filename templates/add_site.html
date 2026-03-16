@@ -26,6 +26,21 @@
             <input type="text" name="address" id="address" placeholder="Наприклад: вул. Промислова, 15" value="{{ form.address.value|default:'' }}">
         </div>
 
+        <div class="form-row">
+            <div class="form-group">
+                <label for="display_mode">Відображення в календарі</label>
+                <select name="display_mode" id="display_mode" class="form-control">
+                    <option value="symbol" selected>Символ</option>
+                    <option value="color">Кольором</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="color">Колір</label>
+                <input type="color" name="color" id="color" value="#4f46e5" style="width: 100%; height: 40px;">
+            </div>
+        </div>
+
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">✅ Зберегти</button>
             <a href="{% url 'sites' %}" class="btn btn-secondary">❌ Скасувати</a>

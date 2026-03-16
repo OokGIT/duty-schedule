@@ -11,9 +11,21 @@
 <div class="form-container">
     <form method="POST" action="{% url 'add_employee' %}" class="duty-form">
         {% csrf_token %}
-        <div class="form-group">
-            <label for="name">Ім'я та прізвище *</label>
-            <input type="text" name="name" id="name" required placeholder="Наприклад: Іван Петренко" value="{{ form.name.value|default:'' }}">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="last_name">Прізвище *</label>
+                <input type="text" name="last_name" id="last_name" required placeholder="Наприклад: Петренко" value="{{ form.last_name.value|default:'' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="first_name">Ім'я *</label>
+                <input type="text" name="first_name" id="first_name" required placeholder="Наприклад: Іван" value="{{ form.first_name.value|default:'' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="patronymic">По-батькові</label>
+                <input type="text" name="patronymic" id="patronymic" placeholder="Наприклад: Іванович" value="{{ form.patronymic.value|default:'' }}">
+            </div>
         </div>
 
         <div class="form-group">

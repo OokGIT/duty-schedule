@@ -4,15 +4,16 @@ from .models import Employee, Site, Duty
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'position', 'created_at']
-    search_fields = ['name', 'position']
+    list_display = ['last_name', 'first_name', 'patronymic', 'position', 'created_at']
+    search_fields = ['last_name', 'first_name', 'patronymic', 'position']
     list_filter = ['position']
 
 
 @admin.register(Site)
 class SiteAdmin(admin.ModelAdmin):
-    list_display = ['name', 'address', 'created_at']
-    search_fields = ['name', 'address']
+    list_display = ['name', 'short_name', 'address', 'display_mode', 'color', 'created_at']
+    search_fields = ['name', 'short_name', 'address']
+    list_filter = ['display_mode']
 
 
 @admin.register(Duty)

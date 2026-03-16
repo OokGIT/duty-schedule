@@ -3,17 +3,34 @@ from django.db import models
 
 class Employee(models.Model):
     """Модель для працівників"""
-    name = models.CharField(max_length=100, verbose_name="Ім'я та прізвище")
-    position = models.CharField(max_length=100, blank=True, verbose_name="Посада")
+    last_name = models.CharField(max_length=50, default='', verbose_name="Прізвище")
+    first_name = models.CharField(max_length=50, default='', verbose_name="Ім'я")
+    patronymic = models.CharField(max_length=50, blank=True, default='', verbose_name="По-батькові")
+    position = models.CharField(max_length=100, blank=True, default='', verbose_name="Посада")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'Працівник'
         verbose_name_plural = 'Працівники'
-        ordering = ['name']
+        ordering = ['last_name']
 
     def __str__(self):
-        return f'{self.name} - {self.position}' if self.position else self.name
+        return f'{self.last_name} {self.first_name} {self.patronymic}' if self.patronymic else f'{self.last_name} {self.first_name}'
+
+    def full_name(self):
+        """Повне ПІБ"""
+        if self.patronymic:
+            return f'{self.last_name} {self.first_name} {self.patronymic}'
+        return f'{self.last_name} {self.first_name}'
+
+    def initials(self):
+        """Прізвище та ініціали"""
+        initial = self.first_name[0] if self.first_name else ''
+        if self.patronymic:
+            initial += f'.{self.patronymic[0]}.'
+        elif self.first_name:
+            initial += '.'
+        return f'{self.last_name} {initial}'
 
     def duties_count(self):
         return self.duties.count()
@@ -24,6 +41,17 @@ class Site(models.Model):
     name = models.CharField(max_length=100, verbose_name="Назва об'єкта")
     short_name = models.CharField(max_length=20, blank=True, verbose_name="Скорочена назва")
     address = models.CharField(max_length=200, blank=True, verbose_name="Адреса")
+    display_mode = models.CharField(
+        max_length=10,
+        choices=[('symbol', 'Символ'), ('color', 'Кольором')],
+        default='symbol',
+        verbose_name="Відображення в календарі"
+    )
+    color = models.CharField(
+        max_length=7,
+        default='#4f46e5',
+        verbose_name="Колір"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

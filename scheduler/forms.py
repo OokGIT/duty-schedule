@@ -6,11 +6,19 @@ class EmployeeForm(forms.ModelForm):
     """Форма для працівників"""
     class Meta:
         model = Employee
-        fields = ['name', 'position']
+        fields = ['last_name', 'first_name', 'patronymic', 'position']
         widgets = {
-            'name': forms.TextInput(attrs={
+            'last_name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': "Наприклад: Іван Петренко"
+                'placeholder': "Наприклад: Петренко"
+            }),
+            'first_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': "Наприклад: Іван"
+            }),
+            'patronymic': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': "Наприклад: Іванович"
             }),
             'position': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -23,7 +31,7 @@ class SiteForm(forms.ModelForm):
     """Форма для об'єктів"""
     class Meta:
         model = Site
-        fields = ['name', 'short_name', 'address']
+        fields = ['name', 'short_name', 'address', 'display_mode', 'color']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -36,6 +44,12 @@ class SiteForm(forms.ModelForm):
             'address': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': "Наприклад: вул. Промислова, 15"
+            }),
+            'display_mode': forms.Select(attrs={'class': 'form-control'}),
+            'color': forms.TextInput(attrs={
+                'class': 'form-control',
+                'type': 'color',
+                'style': 'height: 40px; padding: 2px;'
             }),
         }
 

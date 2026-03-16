@@ -15,29 +15,30 @@
     </a>
 </div>
 
-<!-- Site Change Modal -->
-<div id="siteChangeModal" class="site-modal">
-    <div class="site-modal-content">
-        <span class="site-modal-close" onclick="closeSiteModal()">&times;</span>
-        <h3>🔄 Змінити об'єкт</h3>
+<!-- Site Change Popup Menu (positioned near badge) -->
+<div id="siteChangePopup" class="site-popup">
+    <div class="site-popup-content">
         <form id="siteChangeForm" method="POST" action="{% url 'change_duty_site' %}">
             {% csrf_token %}
-            <input type="hidden" id="dutyId" name="duty_id">
+            <input type="hidden" id="popupDutyId" name="duty_id">
             <input type="hidden" name="year" value="{{ year }}">
             <input type="hidden" name="month" value="{{ month }}">
             
-            <div class="form-group">
-                <label for="newSite">Оберіть новий об'єкт:</label>
-                <select name="site_id" id="newSite" class="form-control" required>
+            <div class="popup-header">
+                <span>🔄 Змінити об'єкт</span>
+                <button type="button" class="popup-close" onclick="closePopup()">&times;</button>
+            </div>
+            
+            <div class="form-group" style="margin: 0.75rem 0;">
+                <select name="site_id" id="popupSite" class="form-control" required style="margin: 0;">
                     {% for site in all_sites %}
                     <option value="{{ site.id }}">{{ site.name }} ({{ site.short_name|default:site.name }})</option>
                     {% endfor %}
                 </select>
             </div>
             
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">✅ Змінити</button>
-                <button type="button" class="btn btn-secondary" onclick="closeSiteModal()">❌ Скасувати</button>
+            <div class="popup-actions">
+                <button type="submit" class="btn btn-primary btn-sm">✅ ОК</button>
             </div>
         </form>
     </div>
@@ -48,7 +49,8 @@
     <table class="calendar-table">
         <thead>
             <tr>
-                <th class="employee-column">Працівник</th>
+                <th class="position-column">Посада</th>
+                <th class="name-column">ПІП</th>
                 {% for day in days_in_month|range %}
                 <th class="day-column">{{ forloop.counter }}</th>
                 {% endfor %}
@@ -57,22 +59,29 @@
         <tbody>
             {% for employee in employees %}
             <tr>
-                <td class="employee-cell">
-                    <div class="employee-name">{{ employee.name }}</div>
-                    <div class="employee-position">{{ employee.position }}</div>
-                </td>
+                <td class="position-cell">{{ employee.position }}</td>
+                <td class="name-cell">{{ employee.initials }}</td>
                 {% for day in days_in_month|range %}
                 <td class="duty-cell">
                     {% with employee_duties=duty_dict|get_item:employee.id %}
                     {% if employee_duties and employee_duties|get_item:forloop.counter %}
                         {% with duties=employee_duties|get_item:forloop.counter %}
                         {% for duty_id, site in duties %}
-                        <div class="site-badge" 
+                        {% if site.display_mode == 'color' %}
+                        <div class="site-badge site-color-badge"
                              title="{{ site.name }} - {{ site.address }}"
-                             onclick="openSiteModal({{ duty_id }}, '{{ site.name }}')"
-                             style="cursor: pointer;">
-                            {{ site.short_name|default:site.name|truncatechars:10 }}
+                             onclick="openPopup(event, {{ duty_id }})"
+                             style="background-color: {{ site.color }}; color: {% if site.color|slice:1:3|intformat:'02x'|add:site.color|slice:3:5|intformat:'02x'|add:site.color|slice:5:7|intformat:'02x' > 384 %}#000{% else %}#fff{% endif %};">
+                            {{ site.short_name|default:site.name|truncatechars:8 }}
                         </div>
+                        {% else %}
+                        <div class="site-badge"
+                             title="{{ site.name }} - {{ site.address }}"
+                             onclick="openPopup(event, {{ duty_id }})"
+                             style="cursor: pointer;">
+                            {{ site.short_name|default:site.name|truncatechars:8 }}
+                        </div>
+                        {% endif %}
                         {% endfor %}
                         {% endwith %}
                     {% else %}
@@ -99,21 +108,47 @@
 </div>
 
 <script>
-function openSiteModal(dutyId, siteName) {
-    document.getElementById('dutyId').value = dutyId;
-    document.getElementById('siteChangeModal').style.display = 'block';
+let currentPopup = null;
+
+function openPopup(event, dutyId) {
+    event.stopPropagation();
+    const popup = document.getElementById('siteChangePopup');
+    const button = event.target;
+    
+    // Position popup near the badge
+    const rect = button.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+    
+    let top = rect.bottom + scrollTop + 5;
+    let left = rect.left + scrollLeft;
+    
+    // Make sure popup doesn't go off screen
+    if (left + 200 > window.innerWidth + scrollLeft) {
+        left = window.innerWidth + scrollLeft - 220;
+    }
+    
+    popup.style.top = top + 'px';
+    popup.style.left = left + 'px';
+    popup.style.display = 'block';
+    popup.style.position = 'absolute';
+    
+    document.getElementById('popupDutyId').value = dutyId;
+    currentPopup = popup;
 }
 
-function closeSiteModal() {
-    document.getElementById('siteChangeModal').style.display = 'none';
-}
-
-// Close modal when clicking outside
-window.onclick = function(event) {
-    var modal = document.getElementById('siteChangeModal');
-    if (event.target == modal) {
-        closeSiteModal();
+function closePopup() {
+    if (currentPopup) {
+        currentPopup.style.display = 'none';
+        currentPopup = null;
     }
 }
+
+// Close popup when clicking outside
+document.addEventListener('click', function(event) {
+    if (currentPopup && !currentPopup.contains(event.target)) {
+        closePopup();
+    }
+});
 </script>
 {% endblock %}
