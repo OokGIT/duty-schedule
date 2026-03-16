@@ -67,7 +67,7 @@
                     {% if employee_duties and employee_duties|get_item:forloop.counter %}
                         {% with duties=employee_duties|get_item:forloop.counter %}
                         {% for duty_id, site in duties %}
-                        {% if site.display_mode == 'color' %}
+                        {% if site.color and site.color != '#4f46e5' %}
                         <div class="site-badge site-color-badge"
                              title="{{ site.name }} - {{ site.address }}"
                              onclick="openPopup(event, {{ duty_id }})"
