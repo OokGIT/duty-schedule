@@ -65,6 +65,22 @@ class Site(models.Model):
     def duties_count(self):
         return self.duties.count()
 
+    def get_text_color(self):
+        """Визначає колір тексту на основі кольору фону"""
+        # Видаляємо # і перетворюємо на RGB
+        hex_color = self.color.lstrip('#')
+        if len(hex_color) != 6:
+            return '#ffffff'
+        try:
+            r = int(hex_color[0:2], 16)
+            g = int(hex_color[2:4], 16)
+            b = int(hex_color[4:6], 16)
+            # Формула яскравості
+            brightness = (r * 299 + g * 587 + b * 114) / 1000
+            return '#000000' if brightness > 128 else '#ffffff'
+        except (ValueError, IndexError):
+            return '#ffffff'
+
 
 class Duty(models.Model):
     """Модель для чергувань"""

@@ -71,7 +71,7 @@
                         <div class="site-badge site-color-badge"
                              title="{{ site.name }} - {{ site.address }}"
                              onclick="openPopup(event, {{ duty_id }})"
-                             style="background-color: {{ site.color }}; color: {% if site.color|slice:1:3|intformat:'02x'|add:site.color|slice:3:5|intformat:'02x'|add:site.color|slice:5:7|intformat:'02x' > 384 %}#000{% else %}#fff{% endif %};">
+                             style="background-color: {{ site.color }}; color: {{ site.get_text_color }};">
                             {{ site.short_name|default:site.name|truncatechars:8 }}
                         </div>
                         {% else %}
